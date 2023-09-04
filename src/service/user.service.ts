@@ -6,6 +6,15 @@ import User from '../entity/user.entity';
 
 @Provide()
 export class UserService extends BaseService {
+  async init() {
+    const { total } = await this.finds({});
+    if (total == 0) {
+      console.log('初始化用户', await this.add({
+        username: 'admin',
+        password: 'admin',
+      }))
+    }
+  }
   async add(user: UserDTO) {
     const data = new User();
     data.username = user.username;

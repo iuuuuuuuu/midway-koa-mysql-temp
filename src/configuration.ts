@@ -1,4 +1,4 @@
-import { Configuration, App } from '@midwayjs/core';
+import { IMidwayContainer, Configuration, App, } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
@@ -17,6 +17,7 @@ import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import { ValidateErrorFilter } from './filter/validate.filter';
 import AuthMiddleware from './middleware/auth.middleware';
+import { UserService } from './service/user.service';
 
 
 const RateLimit = require('koa2-ratelimit').RateLimit;
@@ -47,7 +48,7 @@ export class MainConfiguration {
   @App('koa')
   app: koa.Application;
 
-  async onReady() {
+  async onReady(container: IMidwayContainer) {
     // add middleware
     this.app.useMiddleware([AuthMiddleware, ReportMiddleware]);
     // add filter
@@ -64,5 +65,6 @@ export class MainConfiguration {
         messageKey: 'message',
       })
     );
+    (await container.getAsync(UserService)).init();
   }
 }
