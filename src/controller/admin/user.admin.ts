@@ -24,7 +24,7 @@ export class UserAdminController extends BaseController {
         const { password, username } = body;
         const user = await this.userService.find({
             username,
-            password,
+            password: this.utils.encrypt('sha256', password),
         });
         if (user) {
             return this.ok({

@@ -34,9 +34,9 @@ export default abstract class BaseController {
         const refreshToken = this.utils.md5(this.utils.getDeviceType(ctx) + id);
         await this.utils.delRedis(refreshToken);
         const user = await this.userService.find({
-            _id: id,
+            id: id,
         });
-        const token = await this.utils.jwtSign(user, options);
+        const token = await this.utils.jwtSign({ ...user }, options);
         // 删除对应的refreshToken
         await this.utils.setRedis(refreshToken, {
             token,
